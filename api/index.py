@@ -10,4 +10,4 @@ def download():
 
 @app.route('/')
 def redirect_to_new_path():
-    return redirect('https://drive.google.com/file/d/1FAiXV-s-LBcNAvGegI8aMPXOWe5_KHX7/view?usp=drive_link')
+    return redirect('https://drive.usercontent.google.com/download?id=1FAiXV-s-LBcNAvGegI8aMPXOWe5_KHX7&export=download')
