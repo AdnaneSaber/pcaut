@@ -75,3 +75,11 @@ jobs:
           - Creating a new version of the exe file
         draft: false
         prerelease: false
+        
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: dist/3S_PC_automation1.exe
+        asset_name: 3S_PC_automation1.exe
+        asset_content_type: application/octet-stream
