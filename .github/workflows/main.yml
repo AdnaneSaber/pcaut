@@ -54,11 +54,21 @@ jobs:
         dir
       shell: pwsh
       
-    - name: Upload Release Asset
-      uses: gh-actions/gh-release@v1
+    - name: Install GitHub CLI
+      uses: cli/gh-action@v2
       with:
-        files: dist/3S_PC_automation1.exe
-        tag_name: v1.0.0-${{ github.run_number }}
-        release_name: Release v1.0.0-${{ github.run_number }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        version: 'latest'
+
+    - name: Authenticate GitHub CLI
+      run: gh auth login --with-token < ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Create GitHub Release
+      id: create_release
+      run: |
+        tag_name="v1.0.0-${{ github.run_number }}"
+        release_url=$(gh release create $tag_name dist/3S_PC_automation.exe --title "Release $tag_name" --notes "Automated release for build ${{ github.run_number }}" --json url -q ".url")
+        echo "Release URL: $release_url"
+        echo "RELEASE_URL=$release_url" >> $GITHUB_ENV
+
+    - name: Output Release URL
+      run: echo "Release URL: ${{ env.RELEASE_URL }}"
