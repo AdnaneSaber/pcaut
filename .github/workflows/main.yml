@@ -52,19 +52,19 @@ jobs:
       run: |
         echo "Directory contents after build:"
         dir
+        echo "${{ secrets.GITHUB_TOKEN }}"
       shell: pwsh
       
-    - name: Install GitHub CLI
-      uses: cli/gh-action@v2
-      with:
-        version: 'latest'
-
-    - name: Authenticate GitHub CLI
-      run: gh auth login --with-token < ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Create GitHub Release
+    - name: Create Release
       id: create_release
-      run: |
-        tag_name="v1.0.0-${{ github.run_number }}"
-        release_url=$(gh release create $tag_name dist/3S_PC_automation.exe --title "Release $tag_name" --notes "Automated release for build ${{ github.run_number }}" --json url -q ".url")
-        echo "Release URL: $release_url"
+      uses: actions/create-release@latest
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: |
+          Changes in this Release
+          - Creating a new version of the exe file
+        draft: false
+        prerelease: false
