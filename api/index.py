@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route('/download')
 def download():
-    file_path = "../3S_PC_automation.exe"
+    file_path = "../dist/3S_PC_automation.exe"
     return send_file(file_path, as_attachment=True, download_name='3S_PC_automation.exe')
 
 
