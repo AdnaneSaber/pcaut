@@ -23,15 +23,39 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
+    - name: Log directory contents before build
+      run: |
+        echo "Directory contents before build:"
+        dir
+      shell: pwsh
+
     - name: Clean previous builds
       run: |
-        if [ -d "dist" ]; then rm -rf dist/*; fi
-      shell: bash
+        if (Test-Path -Path "dist") { Remove-Item -Path "dist\*" -Recurse -Force }
+        # Optionally, remove the directory itself if it still exists
+        if (Test-Path -Path "dist") { Remove-Item -Path "dist" -Recurse -Force }
+      shell: pwsh
 
-    - name: PyInstaller Action
-      uses: Martin005/pyinstaller-action@v1.2.0
-      with:
-        python_ver: '3.12'
-        spec: api/3S_PC_automation.py
-        exe_path: dist/3S_PC_automation.exe
-        options: --onefile, --name "3S PC automation", --noconsole,
+    # - name: PyInstaller Action
+    #   uses: Martin005/pyinstaller-action@v1.2.0
+    #   with:
+    #     python_ver: '3.12'
+    #     script: api/3S_PC_automation.py
+    #     output: dist/3S_PC_automation.exe
+    #     options: '--onefile --name "3S_PC_automation" --noconsole'
+
+    - name: Log directory contents after build
+      run: |
+        echo "Directory contents after build:"
+        dir
+      shell: pwsh
+
+    - name: Commit and push executable
+      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+        git add dist/3S_PC_automation.exe
+        git commit -m "Add built executable"
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
