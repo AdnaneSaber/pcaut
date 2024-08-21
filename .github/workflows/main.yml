@@ -23,11 +23,17 @@ jobs:
     #     python -m pip install --upgrade pip
     #     pip install -r requirements.txt
 
+    - name: Log current directory and contents
+      run: |
+        echo "Current directory:"
+        pwd
+        echo "Directory contents:"
+        ls -la
+
     - name: Clean previous builds
       run: |
-        pwd
-        ls
-        ls -la
+        if [ -d "dist" ]; then rm -rf dist/*; fi
+      shell: bash
 
     # - name: PyInstaller Action
     #   uses: Martin005/pyinstaller-action@v1.2.0
