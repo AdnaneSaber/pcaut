@@ -54,7 +54,14 @@ jobs:
         dir
         echo "${{ secrets.GITHUB_TOKEN }}"
       shell: pwsh
-      
+
+    - name: Create Tag
+      uses: negz/create-tag@v1
+      with:
+        version: "v0.1.0"
+        message: "Creating a new version of the exe file"
+        token: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Create Release
       id: create_release
       uses: actions/create-release@latest
