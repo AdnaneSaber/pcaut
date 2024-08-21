@@ -28,7 +28,7 @@ jobs:
         echo "Current directory:"
         pwd
         echo "Directory contents:"
-        ls -la
+        ls
 
     - name: Clean previous builds
       run: |
