@@ -23,9 +23,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Log directory contents before build
+    - name: Log directory contents before delete
       run: |
-        echo "Directory contents before build:"
+        echo "Directory contents before delete:"
         dir
       shell: pwsh
 
@@ -34,6 +34,12 @@ jobs:
         if (Test-Path -Path "dist") { Remove-Item -Path "dist\*" -Recurse -Force }
         # Optionally, remove the directory itself if it still exists
         if (Test-Path -Path "dist") { Remove-Item -Path "dist" -Recurse -Force }
+      shell: pwsh
+
+    - name: Log directory contents after delete
+      run: |
+        echo "Directory contents after delete:"
+        dir
       shell: pwsh
 
     - name: PyInstaller Action
