@@ -60,3 +60,5 @@ jobs:
         asset_path: "dist/3S PC automation.exe"
         asset_name: "3S PC automation.exe"
         asset_content_type: application/octet-stream
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
