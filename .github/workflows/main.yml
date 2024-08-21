@@ -23,23 +23,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Log directory contents before delete
-      run: |
-        echo "Directory contents before delete:"
-        dir
-      shell: pwsh
-
-    - name: Clean previous builds
-      run: |
-        Remove-Item -Path "dist" -Recurse -Force
-      shell: pwsh
-
-    - name: Log directory contents after delete
-      run: |
-        echo "Directory contents after delete:"
-        dir
-      shell: pwsh
-
     - name: PyInstaller Action
       uses: Martin005/pyinstaller-action@v1.2.0
       with:
@@ -48,34 +31,29 @@ jobs:
         exe_path: dist/3S_PC_automation1.exe
         options: --onefile, --name "3S PC automation", --noconsole,
 
-    - name: Log directory contents after build
-      run: |
-        echo "Directory contents after build:"
-        dir
-        echo "${{ secrets.GITHUB_TOKEN }}"
-      shell: pwsh
-
-    - name: Create Tag
-      uses: negz/create-tag@v1
-      with:
-        version: "v0.1.0"
-        message: "Creating a new version of the exe file"
-        token: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Create Release
+    - name: Create Draft Release
       id: create_release
       uses: actions/create-release@latest
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: "v0.1.0"
-        release_name: "v0.1.0"
+        tag_name: "draft-v0.1.0"
+        release_name: "Draft Release v0.1.0"
         body: |
-          Changes in this Release
-          - Creating a new version of the exe file
-        draft: false
+          Draft release containing the latest build.
+        draft: true
         prerelease: false
-        
+
+    - name: Verify file existence
+      run: |
+        if (Test-Path "dist/3S_PC_automation1.exe") {
+          echo "File exists"
+        } else {
+          echo "File does not exist"
+          exit 1
+        }
+      shell: pwsh
+
     - name: Upload Release Asset
       uses: actions/upload-release-asset@v1
       with:
