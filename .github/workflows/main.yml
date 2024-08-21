@@ -31,9 +31,7 @@ jobs:
 
     - name: Clean previous builds
       run: |
-        if (Test-Path -Path "dist") { Remove-Item -Path "dist\*" -Recurse -Force }
-        # Optionally, remove the directory itself if it still exists
-        if (Test-Path -Path "dist") { Remove-Item -Path "dist" -Recurse -Force }
+        Remove-Item -Path "dist" -Recurse -Force
       shell: pwsh
 
     - name: Log directory contents after delete
