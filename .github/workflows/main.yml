@@ -18,20 +18,21 @@ jobs:
     #   with:
     #     python-version: '3.12'
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+    # - name: Install dependencies
+    #   run: |
+    #     python -m pip install --upgrade pip
+    #     pip install -r requirements.txt
 
     - name: Clean previous builds
-      uses: JesseTG/rm@v1.0.0
-      with:
-        path: dist/3S_PC_automation.exe
+      run: |
+        pwd
+        ls
+        ls -la
 
-    - name: PyInstaller Action
-      uses: Martin005/pyinstaller-action@v1.2.0
-      with:
-        python_ver: '3.12'
-        spec: api/3S_PC_automation.py
-        exe_path: dist/3S_PC_automation.exe
-        options: --onefile, --name "3S PC automation", --noconsole,
+    # - name: PyInstaller Action
+    #   uses: Martin005/pyinstaller-action@v1.2.0
+    #   with:
+    #     python_ver: '3.12'
+    #     spec: api/3S_PC_automation.py
+    #     exe_path: dist/3S_PC_automation.exe
+    #     options: --onefile, --name "3S PC automation", --noconsole,
