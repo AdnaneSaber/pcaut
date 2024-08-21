@@ -40,9 +40,9 @@ jobs:
       uses: Martin005/pyinstaller-action@v1.2.0
       with:
         python_ver: '3.12'
-        script: api/3S_PC_automation.py
-        output: dist/3S_PC_automation.exe
-        options: '--onefile --name "3S_PC_automation" --noconsole'
+        spec: api/3S_PC_automation.py
+        exe_path: dist/3S_PC_automation.exe
+        options: --onefile, --name "3S PC automation", --noconsole,
 
     - name: Log directory contents after build
       run: |
