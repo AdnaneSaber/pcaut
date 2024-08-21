@@ -45,7 +45,7 @@ jobs:
       with:
         python_ver: '3.12'
         spec: api/3S_PC_automation.py
-        exe_path: dist/3S_PC_automation.exe
+        exe_path: dist/3S_PC_automation1.exe
         options: --onefile, --name "3S PC automation", --noconsole,
 
     - name: Log directory contents after build
@@ -53,13 +53,21 @@ jobs:
         echo "Directory contents after build:"
         dir
       shell: pwsh
-
-    - name: Commit and push executable
-      run: |
-        git config --global user.name "AdnaneSaber"
-        git config --global user.email "adnanesaber15@gmail.com"
-        git add dist/3S_PC_automation.exe
-        git commit -m "Add built executable"
-        git push
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      with:
+        tag_name: ${{ github.sha }}
+        release_name: Release ${{ github.sha }}
+        draft: false
+        prerelease: false
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: dist/3S_PC_automation.exe
+        asset_name: 3S_PC_automation.exe
+        asset_content_type: application/octet-stream
