@@ -26,10 +26,10 @@ jobs:
     - name: PyInstaller Action
       uses: Martin005/pyinstaller-action@v1.2.0
       with:
-        script: api/3S_PC_automation.py
-        output: dist/3S_PC_automation.exe
-        options: '--noconsole --onefile'
-        # Additional options can be set here if needed
+        python_ver: '3.12'
+        spec: api/3S_PC_automation.py
+        exe_path: dist/3S_PC_automation.exe
+        options: --onefile, --name "3S PC automation", --noconsole,
 
     - name: Commit and push executable
       run: |
