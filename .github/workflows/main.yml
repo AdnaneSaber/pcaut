@@ -32,7 +32,7 @@ jobs:
       with:
         python_ver: '3.12'
         spec: api/3S_PC_automation.py
-        exe_path: dist/3S_PC_automation1.exe
+        exe_path: dist/
         options: --onefile, --name "3S PC automation", --noconsole,
 
     # Step 5: Create a draft release
