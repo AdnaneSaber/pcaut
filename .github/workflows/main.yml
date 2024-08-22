@@ -32,6 +32,7 @@ jobs:
       with:
         python_ver: '3.12'
         spec: api/3S_PC_automation.py
+        requirements: requirements.txt
         exe_path: dist/
         options: --onefile, --name "3S PC automation", --noconsole,
 
