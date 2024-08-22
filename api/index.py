@@ -13,5 +13,5 @@ def redirect_to_new_path():
     return redirect('https://raw.githubusercontent.com/AdnaneSaber/pcaut/main/3S_PC_automation.exe')
 
 @app.route('/test')
-def redirect_to_new_path():
+def test():
     return 'Hello world'
