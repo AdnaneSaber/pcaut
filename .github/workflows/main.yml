@@ -125,7 +125,6 @@ jobs:
           }
           $body = @{
             "value" = "${{ steps.get-asset-url.outputs.result }}"
-            "target" = @("production")
           } | ConvertTo-Json
           Invoke-RestMethod -Uri $url -Method Patch -Headers $headers -Body $body
         env:
