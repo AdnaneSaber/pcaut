@@ -107,6 +107,7 @@ jobs:
             const asset = release.assets.find(a => a.name === assetName);
             if (asset) {
               console.log(`Asset URL: ${asset.browser_download_url}`);
+              return asset.browser_download_url;
             } else {
               console.log('Asset not found.');
             }
