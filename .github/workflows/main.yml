@@ -116,7 +116,9 @@ jobs:
       - name: Update Vercel Environment Variable
         if: steps.get-asset-url.outputs.result != 'null'
         run: |
-          $url = "https://api.vercel.com/v9/projects/${{ github.repository }}/env/LINK_TO_ASSET"
+          $projectId = "pcaut"
+          $envId = "LINK_TO_ASSET"
+          $url = "https://api.vercel.com/v9/projects/$projectId/env/$envId"
           $headers = @{
             "Authorization" = "Bearer $env:VERCEL_CLIENT"
             "Content-Type" = "application/json"
