@@ -90,6 +90,7 @@ jobs:
 
       - name: Get asset URL from draft release
         uses: actions/github-script@v6
+        id: get-asset-url
         if: steps.get-release.outputs.result != 'null'
         with:
           script: |
