@@ -111,3 +111,17 @@ jobs:
             }
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+      - name: Update Vercel Environment Variable
+        if: steps.get-asset-url.outputs.result != 'null'
+        run: |
+          curl -X PATCH "https://api.vercel.com/v1/projects/${{ github.repository }}/envs/LINK_TO_ASSET" \
+            -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "value": "${{ steps.get-asset-url.outputs.result }}",
+              "target": ["production"]
+            }'
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
