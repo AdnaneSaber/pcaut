@@ -39,7 +39,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: "draft-v0.1.0"
+          tag_name: "test_release"
           release_name: "Draft Release v0.1.0"
           body: |
             Draft release containing the latest build.
@@ -67,19 +67,22 @@ jobs:
         with:
           script: |
             const releaseTitle = 'Draft Release v0.1.0';
+            const tagName = 'test_release';
 
             const { data: releases } = await github.rest.repos.listReleases({
               owner: context.repo.owner,
               repo: context.repo.repo,
             });
 
-            const draftRelease = releases.find(release => release.draft && release.name === releaseTitle);
+            const draftRelease = releases.find(release =>
+              release.draft && release.name === releaseTitle && release.tag_name === tagName
+            );
 
             if (draftRelease) {
               console.log(`Draft Release ID: ${draftRelease.id}`);
               return draftRelease.id;
             } else {
-              console.log('No draft release found with the specified title.');
+              console.log('No draft release found with the specified title and tag name.');
               return null;
             }
         env:
