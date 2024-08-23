@@ -62,55 +62,36 @@ jobs:
     needs: build
     environment: dev
     steps:
-      - name: Get Draft Release ID
-        id: get-release
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const releaseTitle = 'Draft Release v0.1.0';
-            const tagName = 'test_release';
-
-            const { data: releases } = await github.rest.repos.listReleases({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-            });
-
-            const draftRelease = releases.find(release =>
-              release.draft && release.name === releaseTitle && release.tag_name === tagName
-            );
-
-            if (draftRelease) {
-              console.log(`Draft Release ID: ${draftRelease.id}`);
-              return draftRelease.id;
-            } else {
-              console.log('No draft release found with the specified title and tag name.');
-              return null;
-            }
+      - name: Get Asset ID
+        id: get_asset_id
+        shell: pwsh
+        run: |
+          $releaseId = ($env:GITHUB_TOKEN | Invoke-RestMethod -Uri ("https://api.github.com/repos/$($env:GITHUB_REPOSITORY)/releases") | Where-Object { $_.tag_name -eq "v1.0.0" }).id
+          $assets = Invoke-RestMethod -Uri ("https://api.github.com/repos/$($env:GITHUB_REPOSITORY)/releases/$releaseId/assets") -Headers @{Authorization = "token $env:GITHUB_TOKEN"}
+          $asset = $assets | Where-Object { $_.name -eq "3S_PC_automation.exe" }
+          $assetId = $asset.id
+          Write-Output "Asset ID: $assetId"
+          echo "::set-output name=asset_id::$assetId"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get Asset URL from Draft Release
         id: get-asset-url
-        if: steps.get-release.outputs.result != 'null'
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const releaseId = '${{ steps.get-release.outputs.result }}';
-            const assetName = '3S_PC_automation.exe';
-
-            const { data: release } = await github.rest.repos.getRelease({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              release_id: releaseId,
-            });
-
-            const asset = release.assets.find(a => a.name === assetName);
-            if (asset) {
-              console.log(`Asset URL: ${asset.browser_download_url}`);
-              return asset.browser_download_url;
-            } else {
-              console.log('Asset not found.');
-            }
+        if: steps.get_asset_id.outputs.result != 'null'
+        shell: pwsh
+        run: |
+          $assetId = ${{ steps.get_asset_id.outputs.asset_id }}
+          $response = curl -L `
+            -H "Accept: application/vnd.github+json" `
+            -H "Authorization: Bearer $env:GITHUB_TOKEN" `
+            -H "X-GitHub-Api-Version: 2022-11-28" `
+            "https://api.github.com/repos/$env:GITHUB_REPOSITORY/releases/assets/$assetId"
+          
+          # Convert the response to a PowerShell object
+          $responseJson = $response | ConvertFrom-Json
+          $browserUrl = $responseJson.browser_download_url
+          Write-Output "Browser URL: $browserUrl"
+          echo "::set-output name=browser_url::$browserUrl"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -123,7 +104,7 @@ jobs:
             "Content-Type" = "application/json"
           }
           $body = @{
-            "value" = ${{ steps.get-asset-url.outputs.result }}
+            "value" = ${{ steps.get-asset-url.outputs.browser_url }}
           } | ConvertTo-Json
           Invoke-RestMethod -Uri $url -Method Patch -Headers $headers -Body $body
         env:
