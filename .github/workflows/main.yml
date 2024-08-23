@@ -81,15 +81,13 @@ jobs:
         shell: pwsh
         run: |
           $assetId = ${{ steps.get_asset_id.outputs.asset_id }}
-          $response = curl -L `
-            -H "Accept: application/vnd.github+json" `
-            -H "Authorization: Bearer $env:GITHUB_TOKEN" `
-            -H "X-GitHub-Api-Version: 2022-11-28" `
-            "https://api.github.com/repos/$env:GITHUB_REPOSITORY/releases/assets/$assetId"
-          
-          # Convert the response to a PowerShell object
-          $responseJson = $response | ConvertFrom-Json
-          $browserUrl = $responseJson.browser_download_url
+          $url = "https://api.github.com/repos/$env:GITHUB_REPOSITORY/releases/assets/$assetId"
+          $headers = @{
+            "Authorization" = "Bearer $env:VERCEL_CLIENT"
+            "Content-Type" = "application/json"
+          }
+          $response = Invoke-RestMethod -Uri $url -Method Get -Headers $headers
+          $browserUrl = $response.browser_download_url
           Write-Output "Browser URL: $browserUrl"
           echo "::set-output name=browser_url::$browserUrl"
         env:
