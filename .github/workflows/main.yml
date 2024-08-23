@@ -60,6 +60,7 @@ jobs:
   update-vercel:
     runs-on: windows-latest
     needs: build
+    environment: dev
     steps:
       - name: Get Draft Release ID
         id: get-release
