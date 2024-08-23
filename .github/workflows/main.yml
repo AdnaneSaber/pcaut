@@ -93,7 +93,7 @@ jobs:
         with:
           script: |
             const releaseId = '${{ steps.get-release.outputs.result }}'; // Get the draft release ID from the previous step
-            const assetName = 'your-asset-file-name'; // Replace with your asset file name
+            const assetName = '3S.PC.automation.exe';
 
             // Fetch the release details using the ID
             const { data: release } = await github.rest.repos.getRelease({
