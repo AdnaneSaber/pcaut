@@ -122,7 +122,7 @@ jobs:
             "Content-Type" = "application/json"
           }
           $body = @{
-            "value" = ${{ steps.get-asset-url.outputs.result }}
+            "value" = "${{ steps.get-asset-url.outputs.result }}"
           } | ConvertTo-Json
           Invoke-RestMethod -Uri $url -Method Patch -Headers $headers -Body $body
         env:
