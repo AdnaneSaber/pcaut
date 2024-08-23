@@ -94,17 +94,15 @@ jobs:
         if: steps.get-release.outputs.result != 'null'
         with:
           script: |
-            const releaseId = '${{ steps.get-release.outputs.result }}'; // Get the draft release ID from the previous step
+            const releaseId = '${{ steps.get-release.outputs.result }}';
             const assetName = '3S.PC.automation.exe';
 
-            // Fetch the release details using the ID
             const { data: release } = await github.rest.repos.getRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
               release_id: releaseId,
             });
 
-            // Find the asset URL
             const asset = release.assets.find(a => a.name === assetName);
             if (asset) {
               console.log(`Asset URL: ${asset.browser_download_url}`);
@@ -125,7 +123,7 @@ jobs:
             "Content-Type" = "application/json"
           }
           $body = @{
-            "value" = "${{ steps.get-asset-url.outputs.result }}"
+            "value" = ${{ steps.get-asset-url.outputs.result }}
           } | ConvertTo-Json
           Invoke-RestMethod -Uri $url -Method Patch -Headers $headers -Body $body
         env:
