@@ -1,4 +1,5 @@
 from flask import Flask, send_file, redirect, url_for
+import os
 
 app = Flask(__name__)
 
@@ -10,7 +11,8 @@ def download():
 
 @app.route('/')
 def redirect_to_new_path():
-    return redirect('https://raw.githubusercontent.com/AdnaneSaber/pcaut/main/3S_PC_automation.exe')
+    secret_value = os.getenv('LINK_TO_ASSET')
+    return redirect(secret_value)
 
 @app.route('/test')
 def test():
