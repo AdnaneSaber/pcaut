@@ -60,7 +60,6 @@ jobs:
   update-vercel:
     runs-on: windows-latest
     needs: build
-    if: needs.build.outputs.upload_asset == 'true'
     steps:
       - name: Get Draft Release ID
         id: get-release
