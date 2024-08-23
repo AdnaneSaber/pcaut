@@ -31,7 +31,7 @@ jobs:
           spec: api/3S_PC_automation.py
           requirements: requirements.txt
           exe_path: dist/
-          options: --onefile, --name "3S PC automation", --noconsole
+          options: --onefile, --name "3S_PC_automation", --noconsole
 
       - name: Create Draft Release
         id: create_release
@@ -51,8 +51,8 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: "dist/3S PC automation.exe"
-          asset_name: "3S PC automation.exe"
+          asset_path: "dist/3S_PC_automation.exe"
+          asset_name: "3S_PC_automation.exe"
           asset_content_type: application/octet-stream
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -96,7 +96,7 @@ jobs:
         with:
           script: |
             const releaseId = '${{ steps.get-release.outputs.result }}';
-            const assetName = '3S PC automation.exe';
+            const assetName = '3S_PC_automation.exe';
 
             const { data: release } = await github.rest.repos.getRelease({
               owner: context.repo.owner,
