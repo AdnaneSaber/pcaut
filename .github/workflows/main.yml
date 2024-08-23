@@ -116,9 +116,15 @@ jobs:
       - name: Update Vercel Environment Variable
         if: steps.get-asset-url.outputs.result != 'null'
         run: |
-          curl -X PATCH "https://api.vercel.com/v1/projects/${{ github.repository }}/envs/LINK_TO_ASSET" \
-            -H "Authorization: Bearer ${{ secrets.VERCEL_CLIENT }}" \
-            -H "Content-Type: application/json" \
-            -d '{"value": "${{ steps.get-asset-url.outputs.result }}", "target": ["production"]}'
+          $url = "https://api.vercel.com/v1/projects/${{ github.repository }}/envs/LINK_TO_ASSET"
+          $headers = @{
+            "Authorization" = "Bearer $env:VERCEL_CLIENT"
+            "Content-Type" = "application/json"
+          }
+          $body = @{
+            "value" = "${{ steps.get-asset-url.outputs.result }}"
+            "target" = @("production")
+          } | ConvertTo-Json
+          Invoke-RestMethod -Uri $url -Method Patch -Headers $headers -Body $body
         env:
           VERCEL_CLIENT: ${{ secrets.VERCEL_CLIENT }}
