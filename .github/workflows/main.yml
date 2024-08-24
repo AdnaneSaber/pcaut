@@ -66,8 +66,12 @@ jobs:
         id: get_asset_id
         shell: pwsh
         run: |
-          $releaseId = ($env:GITHUB_TOKEN | Invoke-RestMethod -Uri ("https://api.github.com/repos/$($env:GITHUB_REPOSITORY)/releases") | Where-Object { $_.tag_name -eq "v1.0.0" }).id
-          $assets = Invoke-RestMethod -Uri ("https://api.github.com/repos/$($env:GITHUB_REPOSITORY)/releases/$releaseId/assets") -Headers @{Authorization = "token $env:GITHUB_TOKEN"}
+          $headers = @{
+            "Authorization" = "token $env:GITHUB_TOKEN"
+            "Accept" = "application/vnd.github.v3+json"
+          }
+          $releaseId = (Invoke-RestMethod -Uri "https://api.github.com/repos/$env:GITHUB_REPOSITORY/releases" -Headers $headers | Where-Object { $_.tag_name -eq "test_release" }).id
+          $assets = Invoke-RestMethod -Uri "https://api.github.com/repos/$env:GITHUB_REPOSITORY/releases/$releaseId/assets" -Headers $headers
           $asset = $assets | Where-Object { $_.name -eq "3S_PC_automation.exe" }
           $assetId = $asset.id
           Write-Output "Asset ID: $assetId"
