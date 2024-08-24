@@ -14,48 +14,48 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.12'
+      # - name: Set up Python
+      #   uses: actions/setup-python@v4
+      #   with:
+      #     python-version: '3.12'
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r api/pyinstaller-requirements.txt
+      # - name: Install dependencies
+      #   run: |
+      #     python -m pip install --upgrade pip
+      #     pip install -r api/pyinstaller-requirements.txt
 
-      - name: PyInstaller Action
-        uses: Martin005/pyinstaller-action@v1.2.0
-        with:
-          python_ver: '3.12'
-          spec: api/3S_PC_automation.py
-          requirements: api/pyinstaller-requirements.txt
-          exe_path: dist/
-          options: --onefile, --name "3S_PC_automation", --noconsole
+      # - name: PyInstaller Action
+      #   uses: Martin005/pyinstaller-action@v1.2.0
+      #   with:
+      #     python_ver: '3.12'
+      #     spec: api/3S_PC_automation.py
+      #     requirements: api/pyinstaller-requirements.txt
+      #     exe_path: dist/
+      #     options: --onefile, --name "3S_PC_automation", --noconsole
 
-      - name: Create Draft Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: "test_release"
-          release_name: "Draft Release v0.1.0"
-          body: |
-            Draft release containing the latest build.
-          draft: true
-          prerelease: false
+      # - name: Create Draft Release
+      #   id: create_release
+      #   uses: actions/create-release@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tag_name: "test_release"
+      #     release_name: "Draft Release v0.1.0"
+      #     body: |
+      #       Draft release containing the latest build.
+      #     draft: true
+      #     prerelease: false
 
-      - name: Upload Release Asset
-        id: upload_asset
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: "dist/3S_PC_automation.exe"
-          asset_name: "3S_PC_automation.exe"
-          asset_content_type: application/octet-stream
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Upload Release Asset
+      #   id: upload_asset
+      #   uses: actions/upload-release-asset@v1
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+      #     asset_path: "dist/3S_PC_automation.exe"
+      #     asset_name: "3S_PC_automation.exe"
+      #     asset_content_type: application/octet-stream
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   update-vercel:
     runs-on: windows-latest
@@ -67,7 +67,7 @@ jobs:
         shell: pwsh
         run: |
           $headers = @{
-            "Authorization" = "token $env:GITHUB_TOKEN"
+            "Authorization" = "Bearer $env:GITHUB_TOKEN"
             "Accept" = "application/vnd.github.v3+json"
           }
           $releaseId = (Invoke-RestMethod -Uri "https://api.github.com/repos/$env:GITHUB_REPOSITORY/releases" -Headers $headers | Where-Object { $_.tag_name -eq "test_release" }).id
@@ -87,8 +87,8 @@ jobs:
           $assetId = ${{ steps.get_asset_id.outputs.asset_id }}
           $url = "https://api.github.com/repos/$env:GITHUB_REPOSITORY/releases/assets/$assetId"
           $headers = @{
-            "Authorization" = "Bearer $env:VERCEL_CLIENT"
-            "Content-Type" = "application/json"
+            "Authorization" = "Bearer $env:GITHUB_TOKEN"
+            "Accept" = "application/vnd.github.v3+json"
           }
           $response = Invoke-RestMethod -Uri $url -Method Get -Headers $headers
           $browserUrl = $response.browser_download_url
