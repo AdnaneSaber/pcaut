@@ -7,6 +7,7 @@ app = Flask(__name__)
 @app.route('/')
 def redirect_to_new_path():
     secret_value = os.getenv('LINK_TO_ASSET')
+    print(secret_value)
     return redirect(secret_value)
 
 
