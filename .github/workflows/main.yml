@@ -33,17 +33,16 @@ jobs:
           exe_path: dist/
           options: --onefile, --name "3S_PC_automation", --noconsole
 
-      - name: Create Draft Release
+      - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: "test_release"
-          release_name: "Draft Release v0.1.0"
+          release_name: "Release v0.1.0"
           body: |
-            Draft release containing the latest build.
-          draft: true
+            Release containing the latest build.
           prerelease: false
 
       - name: Upload Release Asset
@@ -79,7 +78,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Get Asset URL from Draft Release
+      - name: Get Asset URL from Release
         id: get-asset-url
         if: steps.get_asset_id.outputs.result != 'null'
         shell: pwsh
