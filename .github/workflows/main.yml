@@ -39,8 +39,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: "test_release"
-          release_name: "Release v0.1.0"
+          tag_name: ${{ github.run_id }}
+          release_name: Release v0.1.0
           body: |
             Release containing the latest build.
           prerelease: false
