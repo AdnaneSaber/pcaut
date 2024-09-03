@@ -15,7 +15,7 @@ def add_keyboard_layout(layout_name):
 
 
 def downloadApps():
-    urls = ["https://blitz.gg/download/win", "https://download.teamviewer.com/download/TeamViewer_Setup_x64.exe"]
+    urls = ["https://blitz.gg/download/win", "https://download.teamviewer.com/download/TeamViewer_Setup_x64.exe", 'https://tradelocker-desktop.s3.amazonaws.com/tradelocker/win32/x64/TradeLocker.exe']
 
     for i, url in enumerate(urls):
         response = requests.get(url, allow_redirects=True)
