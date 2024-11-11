@@ -3,6 +3,15 @@ from datetime import datetime, timedelta
 import spacy
 
 
+def load_spacy_model():
+    model_path = "en_core_web_sm"
+    try:
+        nlp = spacy.load(model_path)
+    except OSError:
+        download(model_path)
+        nlp = spacy.load(model_path)
+    return nlp
+
 class WeatherAssistant:
     def __init__(self):
         self.days_of_week = {
@@ -38,7 +47,7 @@ class WeatherAssistant:
 class WeatherAssistantEN(WeatherAssistant):
     def __init__(self):
         super().__init__()
-        self.nlp_en = spacy.load("en_core_web_sm")
+        self.nlp_en = load_spacy_model()
 
     def extract_city_and_day(self, query):
         city = None
