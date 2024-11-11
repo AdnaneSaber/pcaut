@@ -1,7 +1,6 @@
 Flask==3.0.3
 requests
 en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl#sha256=1932429db727d4bff3deed6b34cfc05df17794f4a52eeb26cf8928f7c1a0fb85
-ko_core_news_sm @ https://github.com/explosion/spacy-models/releases/download/ko_core_news_sm-3.8.0/ko_core_news_sm-3.8.0-py3-none-any.whl#sha256=15486b93a22ec8ee43f787390afdb4e2086851573eb12b69dd2c4f2a95b3e0a4
 langdetect==1.0.9
 spacy==3.8.2
 kiwipiepy==0.20.1
