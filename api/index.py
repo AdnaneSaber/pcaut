@@ -1,5 +1,6 @@
 from flask import Flask, send_file, redirect, url_for, abort
 import os
+from langdetect import detect
 import requests
 
 app = Flask(__name__)
@@ -56,3 +57,27 @@ def download_file():
         attachment_filename=FILE_NAME,
         as_attachment=True
     )
+
+
+@app.route('/weather', methods=['POST'])
+def get_weather():
+    # Get the query from the request JSON
+    data = request.get_json()
+    query = data.get('question')
+    
+    if not query:
+        return jsonify({"error": "No question provided"}), 400
+
+    # Detect the language of the query
+    language = detect(query)
+    
+    # Based on the detected language, route to the appropriate assistant
+    if language == 'en':  # English
+        city, day = weather_en.extract_city_and_day(query)
+    elif language == 'ko':  # Korean
+        city, day = weather_kr.extract_city_and_day(query)
+    else:
+        return jsonify({"error": "Unsupported language"}), 400
+
+    # Return the response as JSON
+    return jsonify({"city": city, "day": day})

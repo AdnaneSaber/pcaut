@@ -1,2 +1,5 @@
 Flask==3.0.3
 requests
+langdetect==1.0.9
+spacy==3.8.2
+kiwipiepy==0.20.1
